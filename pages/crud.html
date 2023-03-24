@@ -1,0 +1,129 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <h1 class="m-0">Sample CRUD (local)</h1>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileform">
+          Add Profile</button>
+ 
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="items"></tbody>
+          <div class="modal"
+          id="profileform"
+          tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Profile</h5>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profile">
+                        <div class="form-group">
+                            <label for="profileid">ID</label>
+                            <input type="number" class="form-control" id="profileid" placeholder="Enter ID Here">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" class="form-control" id="firstname" placeholder="Enter First Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" placeholder="Enter Last Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter Email">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button id="save" type="button" class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<script>
+    $(function(){
+        let rowtoedit;
+        $("#save").click(function(){
+ 
+            if (rowtoedit){
+                rowtoedit.remove();
+                rowtoedit = null;
+            }
+ 
+            let profile = {
+                profileid: $("#profileid").val(),
+                firstname: $("#firstname").val(),
+                lastname: $("#lastname").val(),
+                email: $("#email").val()
+            };
+ 
+            $("#items").append(`
+                <tr>
+                    <td>${profile.profileid}</td>
+                    <td>${profile.firstname}</td>
+                    <td>${profile.lastname}</td>
+                    <td>${profile.email}</td>
+                    <td>
+                        <button id="editItem" type="button" class="btn btn-primary">Edit</button>
+                        <button id="deleteItem" type="button" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            `);
+ 
+            $("#profileform").modal("hide");
+            clearform();
+        });
+ 
+        $(document).on("click","#editItem",function(){
+ 
+            let item = $(this).parents("tr")[0]; //mao na ni ang imong row
+            clearform();
+            $("#profileform").modal("show");
+            $("#profileid").val($(item).find("td:eq(0)").text());
+            $("#firstname").val($(item).find("td:eq(1)").text());
+            $("#lastname").val($(item).find("td:eq(2)").text());
+            $("#email").val($(item).find("td:eq(3)").text());
+            rowtoedit = item;
+        });
+ 
+        $(document).on("click","#deleteItem",function(){
+            let item = $(this).parents("tr")[0]; //mao na ni ang imong row
+            $(item).remove();
+       });
+    });
+ 
+    function clearform(){
+        $("#profileid").val("");
+        $("#firstname").val("");
+        $("#lastname").val("");
+        $("#email").val("");
+    }
+</script>
